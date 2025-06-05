@@ -16,6 +16,7 @@ export default StyleSheet.create({
   elevation: 4,
   margin: 0, 
   padding: 0, 
+  
 },
 
   departmentBadge: {
@@ -45,7 +46,7 @@ export default StyleSheet.create({
   },
 
   tableHeaderCell: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     color: '#ffffff',
     textAlign: 'center',
@@ -64,7 +65,7 @@ export default StyleSheet.create({
   },
 
   tableCell: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#212529',
     textAlign: 'center',
     lineHeight: 20,
@@ -102,10 +103,12 @@ export default StyleSheet.create({
 
   editButton: {
     backgroundColor: '#007bff',
-    paddingHorizontal: 12,
+    paddingHorizontal: 11,
+    
     paddingVertical: 8,
+    paddingRight: 8,
     borderRadius: 24,
-    minWidth: 55,
+    minWidth: 50,
     alignItems: 'center',
     shadowColor: '#007bff',
     shadowOffset: {
@@ -125,14 +128,16 @@ export default StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-  saveButton: {
+  saveButton:{
     backgroundColor: '#28a745',
-    paddingHorizontal: 16,
+    paddingHorizontal: 11,
+    
     paddingVertical: 8,
-    borderRadius: 20,
-    minWidth: 60,
+    paddingRight: 8,
+    borderRadius: 24,
+    minWidth: 50,
     alignItems: 'center',
-    shadowColor: '#28a745',
+    shadowColor: '#007bff',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -152,8 +157,8 @@ export default StyleSheet.create({
 
   saveAllButton: {
     backgroundColor: '#28a745',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 11,
     borderRadius: 8,
     marginHorizontal: 16,
     marginVertical: 12,

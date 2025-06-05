@@ -20,7 +20,7 @@ const PointsTable = ({ result, subjectNames, studentId, onPointsUpdate, studentS
   const [academicYear, setAcademicYear] = useState(year);
 const [canEdit, setCanEdit] = useState(true);
   // Update local result when prop changes
-const API_URL = 'http://10.0.2.2:8080'; 
+const API_URL = 'http://10.150.255.205:8080'; 
 useEffect(() => {
   const checkRedemptionDeadline = async () => {
   try {
@@ -197,7 +197,7 @@ useEffect(() => {
     setIsSaving(true);
     try {
       // First, get the marks calculation from the backend
-      const calcResponse = await fetch('http://10.0.2.2:8080/api/calculate-subject', {
+      const calcResponse = await fetch('http://10.150.255.205:8080/api/calculate-subject', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +268,7 @@ useEffect(() => {
       setFilteredSubjects(updatedFilteredSubjects);
 
       // Save to backend with all required data
-      const saveResponse = await fetch('http://10.0.2.2:8080/api/save-subject-points', {
+      const saveResponse = await fetch('http://10.150.255.205:8080/api/save-subject-points', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -336,7 +336,7 @@ useEffect(() => {
       )}
       <View style={styles.tableHeader}>
         <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Code</Text>
-        <Text style={[styles.tableHeaderCell, { flex: 3 }]}>Subject Name</Text>
+        <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Subject Name</Text>
         <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Points</Text>
         <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Marks</Text>
         <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Action</Text>
@@ -346,8 +346,8 @@ useEffect(() => {
         <View key={`${subject.subjectCode}-${index}`} style={styles.tableRow}>
     <Text style={[styles.tableCell, { flex: 1 }]}>{subject.subjectCode}</Text>
     <Text style={[styles.tableCell, { flex: 2 }]}>{subject.subjectName}</Text>
-    <Text style={[styles.tableCell, { flex: 1 }]}>Year {subject.academicYear}</Text>
-    <Text style={[styles.tableCell, { flex: 1 }]}>Sem {subject.semester}</Text>
+    {/* <Text style={[styles.tableCell, { flex: 1 }]}>Year {subject.academicYear}</Text>
+    <Text style={[styles.tableCell, { flex: 1 }]}>Sem {subject.semester}</Text> */}
           {editingSubject === subject.subjectCode ? (
             <TextInput
               style={[styles.tableCell, styles.input]}
@@ -393,7 +393,7 @@ useEffect(() => {
 
       {/* Totals row */}
       <View style={styles.tableTotalRow}>
-        <Text style={[styles.tableTotalCell, { flex: 4 }]}>Total</Text>
+        <Text style={[styles.tableTotalCell, { flex: 3 }]}>Total</Text>
         <Text style={[styles.tableTotalCell, { flex: 1 }]}>
           {localResult.totalPoints - (localResult.pointsRemaining || 0)}
         </Text>
@@ -405,7 +405,7 @@ useEffect(() => {
       
       {/* Points remaining row */}
       <View style={styles.tableTotalRow}>
-        <Text style={[styles.tableTotalCell, { flex: 4 }]}>Points Remaining</Text>
+        <Text style={[styles.tableTotalCell, { flex: 2 }]}>Points Remaining</Text>
         <Text style={[styles.tableTotalCell, { flex: 2 }]}>
           {localResult.pointsRemaining || 0}
         </Text>

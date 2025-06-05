@@ -17,10 +17,10 @@ const AdminDashboard = ({ navigation }) => {
   const fetchDepartments = async () => {
     try {
       setLoadingDepts(false);
-      let response = await fetch('http://10.0.2.2:8080/admin/api/departments');
+      let response = await fetch('http://10.150.255.205:8080/admin/api/departments');
       
       if (!response.ok) {
-        response = await fetch('http://10.0.2.2:8080/admin/api/config?year=1');
+        response = await fetch('http://10.150.255.205:8080/admin/api/config?year=1');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -92,7 +92,7 @@ const AdminDashboard = ({ navigation }) => {
     try {
       setConfig({});
       const response = await fetch(
-        `http://10.0.2.2:8080/admin/api/config?year=${year}&department=${department}`
+        `http://10.150.255.205:8080/admin/api/config?year=${year}&department=${department}`
       );
       
       if (!response.ok) {
@@ -165,7 +165,7 @@ const AdminDashboard = ({ navigation }) => {
         department: activeDept
       };
       
-      const response = await fetch('http://10.0.2.2:8080/admin/api/config', {
+      const response = await fetch('http://10.150.255.205:8080/admin/api/config', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -307,6 +307,16 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.drawerItemText}>Department Management</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity 
+                    style={styles.drawerItem}
+                    onPress={() => {
+                      setDrawerOpen(false);
+                      navigation.navigate('MainApp');
+                    }}
+                  >
+                    <Text style={styles.drawerItemText}>Student Page</Text>
+                  </TouchableOpacity>
+
           </View>
         </>
       )}
@@ -440,7 +450,7 @@ const DepartmentManagement = ({ departments, onDepartmentAdded, onClose }) => {
 
     setSaving(true);
     try {
-      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/add', {
+      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -488,7 +498,7 @@ const DepartmentManagement = ({ departments, onDepartmentAdded, onClose }) => {
 
     setDeleting(true);
     try {
-      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/delete', {
+      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

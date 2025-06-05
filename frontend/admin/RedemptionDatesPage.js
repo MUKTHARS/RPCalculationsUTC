@@ -8,6 +8,7 @@ const RedemptionDatesPage = ({ navigation }) => {
   const [department, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState('CSE');
   const [selectedYear, setSelectedYear] = useState(1);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [config, setConfig] = useState({
     startDate: new Date(),
     endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -27,10 +28,10 @@ const RedemptionDatesPage = ({ navigation }) => {
     const fetchDepartments = async () => {
       try {
         setLoadingDepts(true);
-        let response = await fetch('http://10.0.2.2:8080/admin/api/departments');
+        let response = await fetch('http://10.150.255.205:8080/admin/api/departments');
         
         if (!response.ok) {
-          response = await fetch('http://10.0.2.2:8080/admin/api/config?year=1');
+          response = await fetch('http://10.150.255.205:8080/admin/api/config?year=1');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -139,7 +140,7 @@ const loadRedemptionDates = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://10.0.2.2:8080/admin/api/redemption-dates?year=${selectedYear}&department=${selectedDepartment}`
+        `http://10.150.255.205:8080/admin/api/redemption-dates?year=${selectedYear}&department=${selectedDepartment}`
       );
       
       if (!response.ok) {
@@ -207,7 +208,7 @@ const handleSaveDates = async () => {
       ));
     };
 
-    const response = await fetch(`http://10.0.2.2:8080/admin/api/redemption-dates`, {
+    const response = await fetch(`http://10.150.255.205:8080/admin/api/redemption-dates`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -256,7 +257,7 @@ const handleExtendDeadline = async () => {
       throw new Error('Extended date must be after the original end date');
     }
 
-    const response = await fetch(`http://10.0.2.2:8080/admin/api/redemption-dates/extend`, {
+    const response = await fetch(`http://10.150.255.205:8080/admin/api/redemption-dates/extend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -287,12 +288,60 @@ const handleExtendDeadline = async () => {
     <View style={{ flex: 1 }}>
       {/* Header and year selector */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={{ color: 'white', fontSize: 24 }}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Redemption Dates</Text>
-        <View style={{ width: 48 }} />
-      </View>
+  <TouchableOpacity 
+    style={styles.menuButton} 
+    onPress={() => setDrawerOpen(true)}
+  >
+    <Text style={{ color: 'white', fontSize: 24 }}>☰</Text>
+  </TouchableOpacity>
+  <Text style={styles.headerTitle}>Redemption Dates</Text>
+  <View style={{ width: 48 }} />
+</View>
+
+{/* Add drawer code similar to AdminDashboard */}
+{drawerOpen && (
+  <>
+    <View style={styles.overlay} onTouchEnd={() => setDrawerOpen(false)} />
+    <View style={styles.drawer}>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+          navigation.navigate('AdminDashboard');
+        }}
+      >
+        <Text style={styles.drawerItemText}>Dashboard</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+        }}
+      >
+        <Text style={styles.drawerItemText}>Redemption Dates</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+          navigation.navigate('DepartmentManagement');
+        }}
+      >
+        <Text style={styles.drawerItemText}>Department Management</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+              style={styles.drawerItem}
+              onPress={() => {
+                setDrawerOpen(false);
+                navigation.navigate('MainApp');
+              }}
+            >
+              <Text style={styles.drawerItemText}>Student Page</Text>
+            </TouchableOpacity>
+    </View>
+  </>
+)}
 
       {/* Department and Year Selector - Updated to match AdminDashboard */}
       <View style={styles.selectorContainer}>
@@ -556,20 +605,28 @@ const styles = StyleSheet.create({
   },
   // New styles
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#6200ee',
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  menuButton: {
-    padding: 10,
-  },
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 18,
+  backgroundColor: '#6c5ce7',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.15,
+  shadowRadius: 6,
+  elevation: 6,
+},
+headerTitle: {
+  color: 'white',
+  fontSize: 20,
+  fontWeight: '700',
+  letterSpacing: 0.5,
+},
+menuButton: {
+  padding: 12,
+  borderRadius: 8,
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+},
   yearSelector: {
   flexDirection: 'row',
   alignItems: 'center',
@@ -667,6 +724,40 @@ selectorContainer: {
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
+  drawer: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: 280,
+  height: '100%',
+  backgroundColor: '#ffffff',
+  zIndex: 100,
+  elevation: 8,
+  shadowColor: '#000',
+  shadowOffset: { width: 4, height: 0 },
+  shadowOpacity: 0.25,
+  shadowRadius: 8,
+},
+drawerItem: {
+  padding: 20,
+  borderBottomWidth: 1,
+  borderBottomColor: '#f1f2f6',
+  backgroundColor: '#ffffff',
+},
+drawerItemText: {
+  fontSize: 16,
+  color: '#2c3e50',
+  fontWeight: '500',
+},
+overlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  zIndex: 99,
+},
 
 });
 export default RedemptionDatesPage;

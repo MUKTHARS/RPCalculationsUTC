@@ -21,7 +21,7 @@ scrollContent: {
 // Update the header style to fix the status bar issue:
 header: {
   backgroundColor: '#1E3A8A',
-  paddingTop: 10, // Reduced from 20 to prevent status bar overlap
+  paddingTop: 20, // Reduced from 20 to prevent status bar overlap
   paddingBottom: 24,
   paddingHorizontal: 20,
   flexDirection: 'row',

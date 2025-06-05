@@ -11,14 +11,14 @@ const DepartmentManagementPage = ({ navigation }) => {
   const [deleting, setDeleting] = useState(false);
   const [deptToDelete, setDeptToDelete] = useState('');
   const [loading, setLoading] = useState(true);
-
+const [drawerOpen, setDrawerOpen] = useState(false);
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      let response = await fetch('http://10.0.2.2:8080/admin/api/departments');
+      let response = await fetch('http://10.150.255.205:8080/admin/api/departments');
       
       if (!response.ok) {
-        response = await fetch('http://10.0.2.2:8080/admin/api/config?year=1');
+        response = await fetch('http://10.150.255.205:8080/admin/api/config?year=1');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -80,7 +80,7 @@ const DepartmentManagementPage = ({ navigation }) => {
 
     setSaving(true);
     try {
-      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/add', {
+      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ const DepartmentManagementPage = ({ navigation }) => {
 
     setDeleting(true);
     try {
-      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/delete', {
+      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -161,15 +161,59 @@ const DepartmentManagementPage = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.menuButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={{ color: 'white', fontSize: 24 }}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Department Management</Text>
-        <View style={{ width: 48 }} />
-      </View>
+  <TouchableOpacity 
+    style={styles.menuButton} 
+    onPress={() => setDrawerOpen(true)}
+  >
+    <Text style={{ color: 'white', fontSize: 24 }}>☰</Text>
+  </TouchableOpacity>
+  <Text style={styles.headerTitle}>Department Management</Text>
+  <View style={{ width: 48 }} />
+</View>
+
+{/* Add drawer code similar to AdminDashboard */}
+{drawerOpen && (
+  <>
+    <View style={styles.overlay} onTouchEnd={() => setDrawerOpen(false)} />
+    <View style={styles.drawer}>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+          navigation.navigate('AdminDashboard');
+        }}
+      >
+        <Text style={styles.drawerItemText}>Dashboard</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+          navigation.navigate('RedemptionDates');
+        }}
+      >
+        <Text style={styles.drawerItemText}>Redemption Dates</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+        }}
+      >
+        <Text style={styles.drawerItemText}>Department Management</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        onPress={() => {
+          setDrawerOpen(false);
+          navigation.navigate('MainApp');
+        }}
+      >
+        <Text style={styles.drawerItemText}>Student Page</Text>
+      </TouchableOpacity>
+    </View>
+  </>
+)}
 
       <ScrollView contentContainerStyle={styles.container}>
         {loading ? (
@@ -237,20 +281,28 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#6200ee',
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  menuButton: {
-    padding: 10,
-  },
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 18,
+  backgroundColor: '#6c5ce7',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.15,
+  shadowRadius: 6,
+  elevation: 6,
+},
+headerTitle: {
+  color: 'white',
+  fontSize: 20,
+  fontWeight: '700',
+  letterSpacing: 0.5,
+},
+menuButton: {
+  padding: 12,
+  borderRadius: 8,
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+},
   section: {
     marginBottom: 20,
     padding: 15,
@@ -285,6 +337,40 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 50,
   },
+  drawer: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: 280,
+  height: '100%',
+  backgroundColor: '#ffffff',
+  zIndex: 100,
+  elevation: 8,
+  shadowColor: '#000',
+  shadowOffset: { width: 4, height: 0 },
+  shadowOpacity: 0.25,
+  shadowRadius: 8,
+},
+drawerItem: {
+  padding: 20,
+  borderBottomWidth: 1,
+  borderBottomColor: '#f1f2f6',
+  backgroundColor: '#ffffff',
+},
+drawerItemText: {
+  fontSize: 16,
+  color: '#2c3e50',
+  fontWeight: '500',
+},
+overlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  zIndex: 99,
+},
 });
 
 export default DepartmentManagementPage;

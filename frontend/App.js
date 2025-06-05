@@ -21,7 +21,7 @@ import AdminDashboard from './admin/admin_dashboard';
 import DepartmentManagementPage from './admin/DepartmentManagementPage';
 import styles from './styles/AppStyles';
 import {Picker} from '@react-native-picker/picker';
-const API_URL = 'http://10.0.2.2:8080'; 
+const API_URL = 'http://10.150.255.205:8080'; 
 const Stack = createNativeStackNavigator();
 
 function MainAppScreen({ navigation }) {
@@ -382,11 +382,15 @@ const fetchStudentSubjects = async (studentId) => {
 // }
 
 
-
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* <Stack.Screen 
+          name="Login" 
+          component={LoginScreen} 
+          options={{ headerShown: false }}
+        /> */}
         <Stack.Screen 
           name="MainApp" 
           component={MainAppScreen} 
@@ -395,19 +399,27 @@ export default function App() {
         <Stack.Screen 
           name="AdminDashboard" 
           component={AdminDashboard} 
-          options={{ title: 'Admin Dashboard' }}
+          options={{ 
+            title: 'Admin Dashboard',
+            headerBackTitle: 'Back' 
+          }}
         />
         <Stack.Screen 
-  name="RedemptionDates" 
-  component={RedemptionDatesPage} 
-  options={{ title: 'Redemption Dates' }}
-/>
-<Stack.Screen 
-  name="DepartmentManagement" 
-  component={DepartmentManagementPage} 
-/>
-
-
+          name="RedemptionDates" 
+          component={RedemptionDatesPage} 
+          options={{ 
+            title: 'Redemption Dates',
+            headerBackTitle: 'Back' 
+          }}
+        />
+        <Stack.Screen 
+          name="DepartmentManagement" 
+          component={DepartmentManagementPage} 
+          options={{ 
+            title: 'Department Management',
+            headerBackTitle: 'Back' 
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
