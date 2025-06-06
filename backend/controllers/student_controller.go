@@ -508,9 +508,18 @@ func UpdateSubjectPointsHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     if time.Now().After(deadline) {
+    var canEditAfterDeadline bool
+    err = config.DB.QueryRow(`
+        SELECT can_edit_after_deadline 
+        FROM student_rewards 
+        WHERE student_id = ?
+    `, requestData.StudentID).Scan(&canEditAfterDeadline)
+    
+    if err != nil || !canEditAfterDeadline {
         SendErrorResponse(w, "Redemption period has ended. Contact admin for extension.", http.StatusForbidden)
         return
     }
+}
 
     subjectName := requestData.SubjectName
     if subjectName == "" {

@@ -15,10 +15,10 @@ const [drawerOpen, setDrawerOpen] = useState(false);
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      let response = await fetch('http://10.150.255.205:8080/admin/api/departments');
+      let response = await fetch('http://10.0.2.2:8080/admin/api/departments');
       
       if (!response.ok) {
-        response = await fetch('http://10.150.255.205:8080/admin/api/config?year=1');
+        response = await fetch('http://10.0.2.2:8080/admin/api/config?year=1');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -80,7 +80,7 @@ const [drawerOpen, setDrawerOpen] = useState(false);
 
     setSaving(true);
     try {
-      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/add', {
+      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ const [drawerOpen, setDrawerOpen] = useState(false);
 
     setDeleting(true);
     try {
-      const response = await fetch('http://10.150.255.205:8080/admin/api/departments/delete', {
+      const response = await fetch('http://10.0.2.2:8080/admin/api/departments/delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,6 +202,19 @@ const [drawerOpen, setDrawerOpen] = useState(false);
       >
         <Text style={styles.drawerItemText}>Department Management</Text>
       </TouchableOpacity>
+      
+      <TouchableOpacity 
+        style={styles.drawerItem}
+        
+        onPress={() => {
+                      setDrawerOpen(false);
+                      navigation.navigate('UnfreezeStudent');
+                    }}
+      >
+        <Text style={styles.drawerItemText}>Unfreeze Student</Text>
+      </TouchableOpacity>
+      
+      
       <TouchableOpacity 
         style={styles.drawerItem}
         onPress={() => {

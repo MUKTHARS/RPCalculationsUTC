@@ -32,7 +32,7 @@ func SetupRoutes() *mux.Router {
     admin.HandleFunc("/departments", controllers.GetDepartmentsHandler).Methods("GET", "OPTIONS")
     admin.HandleFunc("/departments/add", controllers.AddDepartmentHandler).Methods("POST", "OPTIONS")
     admin.HandleFunc("/departments/delete", controllers.DeleteDepartmentHandler).Methods("POST", "OPTIONS")
-    
+    admin.HandleFunc("/unfreeze-student", controllers.UnfreezeStudentHandler).Methods("POST", "OPTIONS")
     // Redemption dates routes - moved to admin subrouter
     admin.HandleFunc("/redemption-dates", controllers.GetRedemptionDatesHandler).Methods("GET", "OPTIONS")
     admin.HandleFunc("/redemption-dates", controllers.SaveRedemptionDatesHandler).Methods("POST", "OPTIONS")

@@ -5,7 +5,7 @@ import { Alert, Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-na
 const DeadlineNotification = ({ studentYear, department }) => {
   const [notification, setNotification] = useState(null);
   const [visible, setVisible] = useState(false);
-const API_URL = 'http://10.150.255.205:8080'; 
+const API_URL = 'http://10.0.2.2:8080'; 
   useEffect(() => {
     const checkDeadline = async () => {
       try {

@@ -20,45 +20,59 @@ const PointsTable = ({ result, subjectNames, studentId, onPointsUpdate, studentS
   const [academicYear, setAcademicYear] = useState(year);
 const [canEdit, setCanEdit] = useState(true);
   // Update local result when prop changes
-const API_URL = 'http://10.150.255.205:8080'; 
-useEffect(() => {
-  const checkRedemptionDeadline = async () => {
+const API_URL = 'http://10.0.2.2:8080'; 
+
+const checkRedemptionDeadline = async () => {
   try {
-    if (!department || !year) return;
+    if (!studentId) {
+      setCanEdit(false);
+      return;
+    }
+
+    // First check student's unfreeze status
+    const studentResponse = await fetch(`${API_URL}/api/student-rewards/${studentId}`);
+    if (!studentResponse.ok) {
+      throw new Error('Failed to fetch student status');
+    }
     
-    const response = await fetch(`${API_URL}/admin/api/redemption-dates?year=${year}&department=${department}`);
-    const data = await response.json();
+    const studentData = await studentResponse.json();
     
-    if (data.endDate) {
-      let deadline = new Date(data.endDate);
-      if (data.isExtended && data.extendedDate) {
-        deadline = new Date(data.extendedDate);
+    // Explicit check for can_edit_after_deadline status
+    if (studentData.can_edit_after_deadline !== undefined && studentData.can_edit_after_deadline !== null) {
+      setCanEdit(!!studentData.can_edit_after_deadline);
+      return;
+    }
+
+    // If no explicit status, check redemption deadline
+    if (!department || !year) {
+      setCanEdit(true);
+      return;
+    }
+
+    const redemptionResponse = await fetch(`${API_URL}/admin/api/redemption-dates?year=${year}&department=${department}`);
+    const redemptionData = await redemptionResponse.json();
+    
+    if (redemptionData.endDate) {
+      let deadline = new Date(redemptionData.endDate);
+      if (redemptionData.isExtended && redemptionData.extendedDate) {
+        deadline = new Date(redemptionData.extendedDate);
       }
       
-      // Convert UTC time from database to local time
-      const localDeadline = new Date(
-        deadline.getUTCFullYear(),
-        deadline.getUTCMonth(),
-        deadline.getUTCDate(),
-        deadline.getUTCHours(),
-        deadline.getUTCMinutes(),
-        deadline.getUTCSeconds()
-      );
-      
-      // Get current local time
       const now = new Date();
-      
-      // Compare local times
-      setCanEdit(now <= localDeadline);
+      setCanEdit(now <= deadline);
+    } else {
+      setCanEdit(true);
     }
   } catch (error) {
-    console.error('Error checking redemption deadline:', error);
-    setCanEdit(true); // Default to true if there's an error
+    console.error('Error checking edit status:', error);
+    setCanEdit(false); // Default to false on error for security
   }
 };
-  
-  checkRedemptionDeadline();
-}, [department, year]);
+
+
+useEffect(() => {
+checkRedemptionDeadline();
+}, [department, year,studentId]);
 
   useEffect(() => {
     setLocalResult(result);
@@ -161,7 +175,7 @@ useEffect(() => {
       return;
     }
 
-      const currentSubject = filteredSubjects[subjectIndex];
+    const currentSubject = filteredSubjects[subjectIndex];
     const semester = currentSubject?.semester || 1;
     const academicYear = currentSubject?.academicYear || 1; // Use academic year (1-4) instead of calendar year
 
@@ -197,7 +211,7 @@ useEffect(() => {
     setIsSaving(true);
     try {
       // First, get the marks calculation from the backend
-      const calcResponse = await fetch('http://10.150.255.205:8080/api/calculate-subject', {
+      const calcResponse = await fetch('http://10.0.2.2:8080/api/calculate-subject', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +282,7 @@ useEffect(() => {
       setFilteredSubjects(updatedFilteredSubjects);
 
       // Save to backend with all required data
-      const saveResponse = await fetch('http://10.150.255.205:8080/api/save-subject-points', {
+      const saveResponse = await fetch('http://10.0.2.2:8080/api/save-subject-points', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -327,13 +341,6 @@ useEffect(() => {
 
   return (
     <View style={styles.tableContainer}>
-      {studentDepartment && academicYear && (
-        <View style={styles.departmentBadge}>
-          <Text style={styles.departmentText}>
-            {studentDepartment} - Year {academicYear}
-          </Text>
-        </View>
-      )}
       <View style={styles.tableHeader}>
         <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Code</Text>
         <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Subject Name</Text>

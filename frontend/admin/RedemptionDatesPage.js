@@ -28,10 +28,10 @@ const RedemptionDatesPage = ({ navigation }) => {
     const fetchDepartments = async () => {
       try {
         setLoadingDepts(true);
-        let response = await fetch('http://10.150.255.205:8080/admin/api/departments');
+        let response = await fetch('http://10.0.2.2:8080/admin/api/departments');
         
         if (!response.ok) {
-          response = await fetch('http://10.150.255.205:8080/admin/api/config?year=1');
+          response = await fetch('http://10.0.2.2:8080/admin/api/config?year=1');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -140,7 +140,7 @@ const loadRedemptionDates = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://10.150.255.205:8080/admin/api/redemption-dates?year=${selectedYear}&department=${selectedDepartment}`
+        `http://10.0.2.2:8080/admin/api/redemption-dates?year=${selectedYear}&department=${selectedDepartment}`
       );
       
       if (!response.ok) {
@@ -208,7 +208,7 @@ const handleSaveDates = async () => {
       ));
     };
 
-    const response = await fetch(`http://10.150.255.205:8080/admin/api/redemption-dates`, {
+    const response = await fetch(`http://10.0.2.2:8080/admin/api/redemption-dates`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ const handleExtendDeadline = async () => {
       throw new Error('Extended date must be after the original end date');
     }
 
-    const response = await fetch(`http://10.150.255.205:8080/admin/api/redemption-dates/extend`, {
+    const response = await fetch(`http://10.0.2.2:8080/admin/api/redemption-dates/extend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -329,6 +329,17 @@ const handleExtendDeadline = async () => {
       >
         <Text style={styles.drawerItemText}>Department Management</Text>
       </TouchableOpacity>
+
+<TouchableOpacity 
+  style={styles.drawerItem}
+  
+  onPress={() => {
+                setDrawerOpen(false);
+                navigation.navigate('UnfreezeStudent');
+              }}
+>
+  <Text style={styles.drawerItemText}>Unfreeze Student</Text>
+</TouchableOpacity>
 
       <TouchableOpacity 
               style={styles.drawerItem}

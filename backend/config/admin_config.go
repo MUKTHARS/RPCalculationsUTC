@@ -226,6 +226,21 @@ func InitDB() error {
 		}
 	}
 
+	var canEditColumnExists int
+    err = DB.QueryRow(`
+        SELECT COUNT(*) FROM information_schema.columns 
+        WHERE table_name = 'student_rewards' AND column_name = 'can_edit_after_deadline'
+    `).Scan(&canEditColumnExists)
+    if err == nil && canEditColumnExists == 0 {
+        _, err = DB.Exec(`
+            ALTER TABLE student_rewards 
+            ADD COLUMN can_edit_after_deadline BOOLEAN NOT NULL DEFAULT FALSE
+        `)
+        if err != nil {
+            return fmt.Errorf("failed to add can_edit_after_deadline column: %v", err)
+        }
+    }
+
 	var subjectTypeExists int
 	err = DB.QueryRow(`
         SELECT COUNT(*) FROM information_schema.columns 
@@ -237,6 +252,9 @@ func InitDB() error {
 			return err
 		}
 	}
+
+
+	
 
 	// Initialize default data
 	var configCount int
@@ -576,11 +594,11 @@ func createDefaultConfig(year int, department string) *YearlyConfig {
 	// Base values that can vary by year/department
 	redemptionRatio := 10
 	if year == 2 {
-		redemptionRatio = 50
+		redemptionRatio = 10
 	} else if year == 3 {
-		redemptionRatio = 90
+		redemptionRatio = 10
 	} else if year == 4 {
-		redemptionRatio = 120
+		redemptionRatio = 10
 	}
 
 	// Department-specific adjustments

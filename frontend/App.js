@@ -12,6 +12,8 @@ import {
   
  StatusBar,
 } from 'react-native';
+
+import UnfreezeStudentPage from './admin/UnfreezeStudentPage';
 import LoginScreen from './screens/LoginScreen';
 import RedemptionDatesPage from './admin/RedemptionDatesPage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,7 +23,7 @@ import AdminDashboard from './admin/admin_dashboard';
 import DepartmentManagementPage from './admin/DepartmentManagementPage';
 import styles from './styles/AppStyles';
 import {Picker} from '@react-native-picker/picker';
-const API_URL = 'http://10.150.255.205:8080'; 
+const API_URL = 'http://10.0.2.2:8080'; 
 const Stack = createNativeStackNavigator();
 
 function MainAppScreen({ navigation }) {
@@ -420,6 +422,14 @@ export default function App() {
             headerBackTitle: 'Back' 
           }}
         />
+        <Stack.Screen 
+  name="UnfreezeStudent" 
+  component={UnfreezeStudentPage} 
+  options={{ 
+    title: 'Unfreeze Student',
+    headerBackTitle: 'Back' 
+  }}
+/>
       </Stack.Navigator>
     </NavigationContainer>
   );
