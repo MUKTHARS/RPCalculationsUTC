@@ -61,7 +61,8 @@ const UnfreezeStudentPage = ({ navigation }) => {
           <Text style={{ color: 'white', fontSize: 24 }}>☰</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Unfreeze Student</Text>
-        <View style={{ width: 48 }} /> {/* Spacer for alignment */}
+        <View style={{ width: 48 }} />
+         
       </View>
 
       {/* Drawer */}

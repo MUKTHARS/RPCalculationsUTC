@@ -29,21 +29,17 @@ const checkRedemptionDeadline = async () => {
       return;
     }
 
-    // First check student's unfreeze status
+    // First check student's explicit freeze/unfreeze status from admin
     const studentResponse = await fetch(`${API_URL}/api/student-rewards/${studentId}`);
-    if (!studentResponse.ok) {
-      throw new Error('Failed to fetch student status');
-    }
-    
     const studentData = await studentResponse.json();
     
-    // Explicit check for can_edit_after_deadline status
-    if (studentData.can_edit_after_deadline !== undefined && studentData.can_edit_after_deadline !== null) {
-      setCanEdit(!!studentData.can_edit_after_deadline);
+    // If admin has explicitly set freeze/unfreeze status, use that
+    if (studentData.can_edit_after_deadline !== undefined) {
+      setCanEdit(studentData.can_edit_after_deadline);
       return;
     }
 
-    // If no explicit status, check redemption deadline
+    // If no admin override, check redemption dates
     if (!department || !year) {
       setCanEdit(true);
       return;
@@ -65,7 +61,7 @@ const checkRedemptionDeadline = async () => {
     }
   } catch (error) {
     console.error('Error checking edit status:', error);
-    setCanEdit(false); // Default to false on error for security
+    setCanEdit(false); // Default to false on error
   }
 };
 
